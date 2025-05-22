@@ -1,12 +1,12 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 const Wrapper = ({ children, className, shadow = true }) => {
   return (
     <div
       className={clsx(
-        "border border-stone-200 overflow-x-auto rounded-xl",
+        'border border-stone-200 overflow-x-auto rounded-xl',
         {
-          "shadow-sm": shadow,
+          'shadow-sm': shadow,
         },
         className
       )}
@@ -18,7 +18,7 @@ const Wrapper = ({ children, className, shadow = true }) => {
 
 const Head = ({ children }) => {
   return (
-    <thead className="bg-accent sticky top-0 z-10 bg-indigo-900">
+    <thead className="bg-accent sticky top-0 z-10 bg-indigo-950">
       <tr className="uppercase text-sm text-white font-medium">{children}</tr>
     </thead>
   );
@@ -29,10 +29,10 @@ const HeadCell = ({ children, size, className, ...props }) => {
     <th
       scope="col"
       className={clsx(
-        "border-b group border-stone-200 relative whitespace-nowrap",
+        'border-b group border-stone-200 relative whitespace-nowrap',
         {
-          "px-3 py-2": size == "sm",
-          "p-4": size != "sm",
+          'px-3 py-2': size == 'sm',
+          'p-4': size != 'sm',
         },
         className
       )}
@@ -63,10 +63,10 @@ const Cell = ({ children, size, className, ...props }) => {
     <td
       {...props}
       className={clsx(
-        "whitespace-nowrap",
+        'whitespace-nowrap',
         {
-          "px-4 py-3": size != "sm",
-          "px-3 py-2": size == "sm",
+          'px-4 py-3': size != 'sm',
+          'px-3 py-2': size == 'sm',
         },
         className
       )}

@@ -1,13 +1,13 @@
-import { Outlet } from "react-router";
+import { Outlet } from 'react-router';
 
-import { DriversProvider } from "../utils/driver-context";
+import { DataProvider } from '../utils/data-context';
 
 export function BaseLayout({}) {
   return (
     <div className="flex flex-col w-dvw h-dvh">
-      <DriversProvider>
+      <DataProvider>
         <Outlet />
-      </DriversProvider>
+      </DataProvider>
     </div>
   );
 }
