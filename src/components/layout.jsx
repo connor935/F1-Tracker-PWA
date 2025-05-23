@@ -1,13 +1,9 @@
 import { Outlet } from 'react-router';
 
-import { DataProvider } from '../utils/data-context';
-
 export function BaseLayout({}) {
   return (
     <div className="flex flex-col w-dvw h-dvh">
-      <DataProvider>
-        <Outlet />
-      </DataProvider>
+      <Outlet />
     </div>
   );
 }
