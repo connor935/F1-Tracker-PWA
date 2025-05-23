@@ -3,14 +3,31 @@ import useSWRMutation from 'swr/mutation';
 
 import { customFetcher } from '../utils/fetcher';
 
-export function SessionData({ sessionKey = 'latest', updateInterval = 30000 }) {
-  const [sessionEventData, setSessionEventData] = useState(null);
+export function SessionData({
+  sessionKey = 'latest',
+  meetingKey = 'latest',
+  updateInterval = 30000,
+}) {
+  const [eventData, setEventData] = useState(null);
   const {
     data: sessionData,
     isMutating: sessionLoading,
     trigger: loadSession,
   } = useSWRMutation(
     `https://api.openf1.org/v1/sessions?session_key=${sessionKey}`,
+    customFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+    }
+  );
+
+  const {
+    data: meetingData,
+    isLoading: meetingLoading,
+    trigger: loadMeeting,
+  } = useSWRMutation(
+    `https://api.openf1.org/v1/meetings?meeting_key=${meetingKey}`,
     customFetcher,
     {
       revalidateOnFocus: false,
@@ -35,6 +52,7 @@ export function SessionData({ sessionKey = 'latest', updateInterval = 30000 }) {
     function fetchSessionData() {
       loadSession();
       loadWeather();
+      loadMeeting();
     }
 
     fetchSessionData();
@@ -42,6 +60,7 @@ export function SessionData({ sessionKey = 'latest', updateInterval = 30000 }) {
     const sessionInterval = setInterval(() => {
       loadSession();
       loadWeather();
+      loadMeeting();
     }, updateInterval);
 
     return () => clearInterval(sessionInterval); // Cleanup on unmount
@@ -49,11 +68,12 @@ export function SessionData({ sessionKey = 'latest', updateInterval = 30000 }) {
 
   useEffect(() => {
     if (sessionData && weatherData) {
-      //   console.log('Event data:', sessionData);
+      //console.log('Event data:', sessionData[0]);
       //   console.log('Weather data:', weatherData[weatherData.length - 1]);
-      setSessionEventData({
+      setEventData({
         ...sessionData[0],
         date_start: new Date(sessionData[0].date_start).toLocaleString(),
+        meeting_name: meetingData[0]?.meeting_name,
         weatherData: { ...weatherData[weatherData.length - 1] },
       });
     }
@@ -61,25 +81,25 @@ export function SessionData({ sessionKey = 'latest', updateInterval = 30000 }) {
 
   return (
     <>
-      {sessionEventData ? (
-        <div className="w-full flex justify-between font-semibold bg-indigo-950 text-white p-4 rounded-lg">
+      {eventData ? (
+        <div className="w-full flex justify-between font-semibold bg-indigo-950 text-white p-4 rounded-xl">
           <div className="flex space-x-4">
-            <p>{sessionEventData?.location}</p>
-            <p>{sessionEventData?.date_start}</p>
-            <p>{sessionEventData?.session_name}</p>
+            <p>{eventData?.meeting_name}</p>
+            <p>{eventData?.date_start}</p>
+            <p>{eventData?.session_name}</p>
           </div>
           <div className="flex space-x-4">
             <div className="flex space-x-2">
               <p>Temp</p>
-              <p>{`${sessionEventData?.weatherData?.air_temperature}°C`}</p>
+              <p>{`${eventData?.weatherData?.air_temperature}°C`}</p>
             </div>
             <div className="flex space-x-2">
               <p>Track Temp</p>
-              <p>{`${sessionEventData?.weatherData?.track_temperature}°C`}</p>
+              <p>{`${eventData?.weatherData?.track_temperature}°C`}</p>
             </div>
             <div className="flex space-x-2">
               <p>Downfall</p>
-              <p>{`${sessionEventData?.weatherData?.rainfall}%`}</p>
+              <p>{`${eventData?.weatherData?.rainfall}%`}</p>
             </div>
           </div>
         </div>

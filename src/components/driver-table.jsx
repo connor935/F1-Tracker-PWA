@@ -24,7 +24,7 @@ export function DriverTable({ sessionKey = 'latest', updateInterval = 5000 }) {
     isMutating: isLoadingPositions,
     trigger: loadPositions,
   } = useSWRMutation(
-    `https://api.openf1.org/v1/positions?session_key=${sessionKey}`,
+    `https://api.openf1.org/v1/position?session_key=${sessionKey}`,
     customFetcher,
     {
       revalidateOnFocus: false,
